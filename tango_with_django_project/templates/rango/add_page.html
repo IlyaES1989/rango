@@ -1,0 +1,49 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Add page
+{% endblock %}
+
+{% block body_block %}
+<link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet">
+    {% if category %}
+   <div class ="jumbotron-4">
+
+            <h1 class="jumbotron-heading">
+                Add a Page to {{ category.name }}
+            </h1>
+        {% if user.is_authenticated %}
+        </div>
+        <form id="page_form" method="POST" action="{% url 'rango:add_page' category.slug %}">
+          <div class="form-group">
+              {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+            <label>Title of the page</label>
+            <input class="form-control" type="text" name="title" required id="id_title"
+                   placeholder="Enter title of the page"/>
+            <label>URL of the page</label>
+            <input class="form-control" type="url"  name="url" required id="id_url" placeholder="http://sample.com"/>
+          </div>
+
+            <input class="form-control" type="hidden"  name="page_id" required id="id_page_id" value="0"/>
+            <button class="btn btn-outline-primary" type="submit" name="submit"> Add page</button>
+        </form>
+        {% else %}
+            <h3> Please login or register to add a new page</h3>
+        <div class="container-fluid">
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <a class="btn btn-outline-primary" href="{% url 'registration_register' %}">Register</a>
+                <a class="btn btn-outline-primary"  href="{% url 'auth_login' %}">Login</a>
+            </div>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <div>
+            <strong> The specified category does not exist!</strong>
+        </div>
+    {% endif %}
+{% endblock%}

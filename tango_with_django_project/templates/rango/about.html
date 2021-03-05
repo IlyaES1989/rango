@@ -1,0 +1,37 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    About
+{% endblock %}
+
+{% block body_block %}
+        <div class ="jumbotron p-2">
+        <div class="container ml-1">
+            <h2 class="h2">
+                This tutorial has been put together by ilyaes1989
+            </h2>
+        </div>
+        </div>
+    <div>
+        <img src="{{MEDIA_URL}}chameleon.jpg" alt="Picture of a Cat?" style="width:20%;"/>
+    </div>
+    <div>
+        {% if visits > 3 %}
+        You are here for the {{ visits }}th time
+        {% else%}
+        You are here  for the {{ visits }} time
+        {% endif %}
+    </div>
+
+<button class="btn btn-primary" onclick="alert('You clicked the button using inline JavaScript.');">
+    Clik me - I run JavaScript
+</button>
+
+
+<button class="btn btn-primary" id="about-btn">
+    Click me - I'm JavaScript Ice
+</button><br/>
+<p> Text using JQuery</p> <br/>
+<div id="msg">Hello - I'm here for a JQuery Example too</div>
+{% endblock %}

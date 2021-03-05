@@ -1,0 +1,91 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+{% load icon %}
+
+{% block title_block %}
+    {{ category.name }}
+{% endblock %}
+
+{% block body_block %}
+    {% if category %}
+  <div class ="jumbotron p-2 mb-1">
+        <div class="container ml-1">
+            <h2 class="h2">
+                {{ category.name }}
+            </h2>
+        </div>
+    </div>
+    <div>
+        <span id="like_count" class="badge badge-primary badge-pill">{{ category.likes }}</span>
+        people like this category
+        {% if user.is_authenticated %}
+        <button id="likes" data-catid="{{ category.id }}" class="btn btn-primary btn-sm" >
+            <span class="align-self-start">{% icon "thumbs-up" width='15' %}</span> Like category
+        </button>
+        {% endif %}
+    </div>
+
+    <div class="container p-0 mt-0 mb-2 mr-1">
+        <a class="btn btn-outline-primary btn-sm" href="{% url 'rango:add_page' category.slug %}"
+           style="float:right" >
+            Add Page</a>
+    </div>
+</script>
+    <div id="pages_items" class="container ml-0">
+            {% if pages %}
+            <ul>
+                {% for page in pages %}
+                <li class="list-group-item">
+                    <a href="{% url 'rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a>
+                    {% if page.views > 1 %}
+                        ({{ page.views}} views)
+                    {% elif page.views == 1 %}
+                        ({{ page.views}} view)
+                    {% endif%}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                    <strong> No pages currently in category</strong><br/>
+            {% endif %}
+
+            {% else %}
+            The specified category does not exist!
+            {% endif %}
+
+    </div>
+
+{% if user.is_authenticated %}
+    <div class="container ml-0">
+            <form class="form-inline pl-4" id="user_form"
+                  method="POST" action="{% url 'rango:show_category' category.slug %}">
+                {% csrf_token %}
+                <div class="form-group mx-sm-3 mb-2">
+                    <input class="form-control" type="text"  name="query" value="{{ query }}" id="query" />
+                </div>
+                <button class="btn btn-primary mb-2" type="submit" name="submit" value="Search">Search</button>
+            </form>
+        {% if result_list%}
+        <h3> Results</h3>
+        <div class="list=group">
+            {% for result in result_list %}
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    <a href="{{ result.link }}">{{ result.title }}</a>
+                </h4>
+                <p class="list-group-item-text">{{ result.summary }}</p>
+
+                <button class="rango-add btn btn-primary"
+                        data-catid="{{category.id}}"
+                        data-title="{{result.title}}"
+                    data-url="{{result.link}}" type="button">
+                    <span>{% icon 'plus' %}</span>Add Page
+                </button>
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endif%}
+    </div>
+    {% endif %}
+{% endblock %}
